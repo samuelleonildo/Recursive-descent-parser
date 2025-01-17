@@ -105,7 +105,11 @@ Token Tokenizer::nextToken()
         return Token(">", Token::REL);
 
     case '+':
-        return Token("+", Token::ADD);
+        if (this->peek() == ' ')
+        {
+            return Token("+", Token::ADD);
+        }
+        return Token("+", Token::UNARY);
 
     case '-':
         if (this->peek() == ' ')
