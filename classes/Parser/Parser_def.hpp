@@ -87,7 +87,7 @@ Expression* Parser::parse_eq_exp()
 
         Expression* e2 = this->parse_rel_exp();
 
-        if (e1->getPrimitiveType() != e2->getPrimitiveType()) { this->is_possible = false; }
+        if (e1->isBool() != e2->isBool()) { this->is_possible = false; }
 
         e1 = new BinaryExpression(e1, op, e2);
     }
@@ -108,7 +108,7 @@ Expression* Parser::parse_rel_exp()
 
         Expression* e2 = this->parse_add_exp();
 
-        if (e1->getPrimitiveType() == "bool" || e2->getPrimitiveType() == "bool") { this->is_possible = false; }
+        if (e1->isBool() || e2->isBool()) { this->is_possible = false; }
 
         e1 = new BinaryExpression(e1, op, e2);
     }
@@ -127,7 +127,7 @@ Expression* Parser::parse_add_exp()
 
         Expression* e2 = this->parse_mul_exp();
 
-        if (e1->getPrimitiveType() == "bool" || e2->getPrimitiveType() == "bool") { this->is_possible = false; }
+        if (e1->isBool() || e2->isBool()) { this->is_possible = false; }
 
         e1 = new BinaryExpression(e1, op, e2);
     }
@@ -146,10 +146,7 @@ Expression* Parser::parse_mul_exp()
 
         Expression* e2 = this->parse_unary_exp();
 
-        if (e1->getPrimitiveType() == "bool" || e1->getPrimitiveType() == "bool" || (op.getSymbol() == "/" && e2->evaluate() == 0))
-        {
-            this->is_possible = false;
-        }
+        if (e1->isBool() || e1->isBool() || (op.getSymbol() == "/" && e2->evaluate() == 0)) { this->is_possible = false; }
 
         e1 = new BinaryExpression(e1, op, e2);
     }
@@ -166,8 +163,17 @@ Expression* Parser::parse_unary_exp()
 
         Expression* e2 = this->parse_literal();
 
-        if (op.getSymbol() == "-" && e2->getPrimitiveType()== "bool") { this->is_possible = false; }
-        if (op.getSymbol() == "!") { this->is_bool = true; }
+        std::string symbol = op.getSymbol();
+
+        if (symbol == "-" || symbol == "+")
+        {
+            if (e2->isBool() || symbol == "-" && e2->evaluate() == 0)
+            {
+                this->is_possible = false;
+            }
+        }
+
+        if (symbol == "!") { this->is_bool = true; }
 
         e2 = new UnaryExpression(e2, op);
 
@@ -200,8 +206,20 @@ Expression* Parser::parse_literal()
     {
         if (curr_token.type == Token::ADD)
         {
-            if (curr_token.value == "-")
+            Operand op(curr_token.value);
+            this->consume();
+
+            Expression* exp2 = parse_exp();
+            Expression* exp = new UnaryExpression(exp2, op);
+
+            return exp;
+        }
+        if (curr_token.type == Token::UNARY)
+        {
+            if (curr_token.value == "!")
             {
+                this->is_bool = true;
+
                 Operand op(curr_token.value);
                 this->consume();
 
