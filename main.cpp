@@ -35,6 +35,8 @@ int main(void)
 
             delete expression;   
         }
+
+        delete[] input_arr;
     }
     catch(const std::exception& e)
     {
