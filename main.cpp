@@ -2,33 +2,39 @@
 
 int main(void)
 {
-    std::string input = "";
-    std::cout << "input: ";
-    std::getline(std::cin, input);
-
     try
     {
-        Parser parser(input);
-        Expression* expression = parser.parse_exp();
+        int c = 0;
+        std::cin >> c;
+        std::cin.ignore();
 
-        if (parser.isPossible())
+        std::string* input_arr = new std::string[c];
+
+        for (int i = 0; i < c; i++) { std::getline(std::cin, input_arr[i]); }
+        for (int i = 0; i < c; i++) 
         {
-            if (parser.isBool())
+            Parser parser(input_arr[i]);
+            Expression* expression = parser.parse_exp();
+
+            if (parser.isPossible())
             {
-                expression->evaluate() ? std::cout << "true" : std::cout << "false";
-                std::cout << '\n';
+                if (parser.isBool())
+                {
+                    expression->evaluate() ? std::cout << "true" : std::cout << "false";
+                    std::cout << '\n';
+                }
+                else
+                {
+                    std::cout << expression->evaluate() << '\n';
+                }
             }
             else
             {
-                std::cout << expression->evaluate() << '\n';
+                std::cout << "error" << '\n';
             }
-        }
-        else
-        {
-            std::cout << "error" << '\n';
-        }
 
-        delete expression;
+            delete expression;   
+        }
     }
     catch(const std::exception& e)
     {
