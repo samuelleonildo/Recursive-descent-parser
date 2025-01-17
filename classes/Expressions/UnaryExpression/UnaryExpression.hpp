@@ -13,7 +13,7 @@ public:
     explicit UnaryExpression(Expression* _exp, Operand _op);
     ~UnaryExpression();
 
-    std::string& getPrimitiveType() override;
+    bool isBool() override;
     int evaluate() override;
 };
 

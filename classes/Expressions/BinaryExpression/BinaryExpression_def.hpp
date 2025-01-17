@@ -19,7 +19,7 @@ BinaryExpression::~BinaryExpression()
     delete this->right;
 }
 
-std::string& BinaryExpression::getPrimitiveType() { return this->primitive_type; }
+bool BinaryExpression::isBool() { return (this->primitive_type == "bool"); }
 
 int BinaryExpression::evaluate()
 {

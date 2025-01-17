@@ -14,7 +14,7 @@ public:
     explicit BinaryExpression(Expression* _left, Operand _op, Expression* _right);
     ~BinaryExpression();
 
-    std::string& getPrimitiveType() override;
+    bool isBool() override;
     int evaluate() override;
 };
 

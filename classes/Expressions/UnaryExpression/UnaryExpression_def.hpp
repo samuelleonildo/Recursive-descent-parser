@@ -7,7 +7,7 @@ UnaryExpression::UnaryExpression(Expression* _exp, Operand _op) : op(_op)
 {
     this->exp = _exp;
 
-    if (this->op.getSymbol() == "-") { this->primitive_type = "int"; }
+    if (this->op.getSymbol() == "-" || this->op.getSymbol() == "+") { this->primitive_type = "int"; }
     else { this->primitive_type = "bool"; }
 }
 UnaryExpression::~UnaryExpression()
@@ -15,7 +15,7 @@ UnaryExpression::~UnaryExpression()
     delete this->exp;
 }
 
-std::string& UnaryExpression::getPrimitiveType() { return this->primitive_type; }
+bool UnaryExpression::isBool() { return (this->primitive_type == "bool"); }
 
 int UnaryExpression::evaluate()
 {

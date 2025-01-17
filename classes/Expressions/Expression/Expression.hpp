@@ -10,8 +10,8 @@ protected:
 
 public:
     virtual ~Expression() = default;
-    virtual std::string& getPrimitiveType() = 0;
     virtual int evaluate() = 0;
+    virtual bool isBool() = 0;
 };
 
 #endif

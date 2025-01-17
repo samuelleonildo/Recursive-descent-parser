@@ -13,7 +13,7 @@ public:
     // Literal() : is_digit(true), value("int") {}
     explicit Literal(const std::string& _value);
 
-    std::string& getPrimitiveType() override;
+    bool isBool() override;
     int evaluate() override;
 };
 

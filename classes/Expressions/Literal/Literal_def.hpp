@@ -18,7 +18,7 @@ Literal::Literal(const std::string& _value)
     }
 }
 
-std::string& Literal::getPrimitiveType() { return this->primitive_type; }
+bool Literal::isBool() { return (this->primitive_type == "bool"); }
 
 int Literal::evaluate()
 {
