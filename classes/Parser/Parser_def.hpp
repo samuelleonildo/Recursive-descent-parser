@@ -34,13 +34,13 @@ void Parser::consume()
 
 Expression* Parser::parse_exp()
 {
-    return Parser::parse_or_exp();
+    return this->parse_or_exp();
 }
 Expression* Parser::parse_or_exp()
 {
     Expression* e1 = this->parse_and_exp();
 
-    if (curr_token.type == Token::OR)
+    while (curr_token.type == Token::OR)
     {
         this->is_bool = true;
 
@@ -59,7 +59,7 @@ Expression* Parser::parse_and_exp()
 {
     Expression* e1 = this->parse_eq_exp();
 
-    if (curr_token.type == Token::AND)
+    while (curr_token.type == Token::AND)
     {
         this->is_bool = true;
 
@@ -78,7 +78,7 @@ Expression* Parser::parse_eq_exp()
 {
     Expression* e1 = this->parse_rel_exp();
 
-    if (curr_token.type == Token::EQ)
+    while (curr_token.type == Token::EQ)
     {
         this->is_bool = true;
 
@@ -99,7 +99,7 @@ Expression* Parser::parse_rel_exp()
 {
     Expression* e1 = this->parse_add_exp();
 
-    if (curr_token.type == Token::REL)
+    while (curr_token.type == Token::REL)
     {
         this->is_bool = true;
 
@@ -120,7 +120,7 @@ Expression* Parser::parse_add_exp()
 {
     Expression* e1 = this->parse_mul_exp();
 
-    if (curr_token.type == Token::ADD)
+    while (curr_token.type == Token::ADD)
     {
         Operand op(curr_token.value);
         this->consume();
@@ -139,7 +139,7 @@ Expression* Parser::parse_mul_exp()
 {
     Expression* e1 = this->parse_unary_exp();
 
-    if (curr_token.type == Token::MUL)
+    while (curr_token.type == Token::MUL)
     {
         Operand op(curr_token.value);
         this->consume();
@@ -175,9 +175,7 @@ Expression* Parser::parse_unary_exp()
 
         if (symbol == "!") { this->is_bool = true; }
 
-        e2 = new UnaryExpression(e2, op);
-
-        return e2;
+        return new UnaryExpression(e2, op);
     }
 
     Expression* e1 = this->parse_literal();
@@ -212,6 +210,7 @@ Expression* Parser::parse_literal()
             Expression* exp2 = parse_exp();
             Expression* exp = new UnaryExpression(exp2, op);
 
+
             return exp;
         }
         if (curr_token.type == Token::UNARY)
@@ -226,15 +225,19 @@ Expression* Parser::parse_literal()
                 Expression* exp2 = parse_exp();
                 Expression* exp = new UnaryExpression(exp2, op);
 
+
                 return exp;
             }
 
             return parse_exp();
         }
 
+        std::cout << curr_token.type << '\n';
         this->is_possible = false;
 
         Expression* literal = new Literal("false");
+
+
         return literal;
     }
 }
