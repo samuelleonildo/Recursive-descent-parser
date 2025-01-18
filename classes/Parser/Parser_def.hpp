@@ -146,7 +146,7 @@ Expression* Parser::parse_mul_exp()
 
         Expression* e2 = this->parse_unary_exp();
 
-        if (e1->isBool() || e1->isBool() || (op.getSymbol() == "/" && e2->evaluate() == 0)) { this->is_possible = false; }
+        if (e1->isBool() || e2->isBool() || (op.getSymbol() == "/" && e2->evaluate() == 0)) { this->is_possible = false; }
 
         e1 = new BinaryExpression(e1, op, e2);
     }
