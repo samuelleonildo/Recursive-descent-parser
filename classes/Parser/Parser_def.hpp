@@ -156,13 +156,12 @@ Expression* Parser::parse_mul_exp()
 
 Expression* Parser::parse_unary_exp()
 {
-    if (curr_token.type == Token::UNARY)
+    if (curr_token.type == Token::UNARY || curr_token.type == Token::ADD)
     {
         Operand op(curr_token.value);
         this->consume();
 
-        Expression* e2 = this->parse_literal();
-
+        Expression* e2 = this->parse_unary_exp();
         std::string symbol = op.getSymbol();
 
         if (symbol == "-" || symbol == "+")
@@ -172,15 +171,13 @@ Expression* Parser::parse_unary_exp()
                 this->is_possible = false;
             }
         }
-
+        
         if (symbol == "!") { this->is_bool = true; }
 
         return new UnaryExpression(e2, op);
     }
 
-    Expression* e1 = this->parse_literal();
-
-    return e1;
+    return this->parse_literal();
 }
 
 Expression* Parser::parse_literal()
@@ -200,46 +197,11 @@ Expression* Parser::parse_literal()
 
         return exp;
     }
-    else
-    {
-        if (curr_token.type == Token::ADD)
-        {
-            Operand op(curr_token.value);
-            this->consume();
 
-            Expression* exp2 = parse_exp();
-            Expression* exp = new UnaryExpression(exp2, op);
-
-
-            return exp;
-        }
-        if (curr_token.type == Token::UNARY)
-        {
-            if (curr_token.value == "!")
-            {
-                this->is_bool = true;
-
-                Operand op(curr_token.value);
-                this->consume();
-
-                Expression* exp2 = parse_exp();
-                Expression* exp = new UnaryExpression(exp2, op);
-
-
-                return exp;
-            }
-
-            return parse_exp();
-        }
-
-        std::cout << curr_token.type << '\n';
-        this->is_possible = false;
-
-        Expression* literal = new Literal("false");
-
-
-        return literal;
-    }
+    // only syntactically invalid expressions reach here
+    // ex: '2 + * 3'
+    this->is_possible = false;
+    return new Literal("false");
 }
 
 #endif
