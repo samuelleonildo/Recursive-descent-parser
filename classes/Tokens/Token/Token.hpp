@@ -10,8 +10,8 @@ public:
     enum Type {
         INT, // 0
         BOOL, // 1
-        LPAREN, // 2
-        RPAREN, // 3
+        LPAREN, // 2 (
+        RPAREN, // 3 )
 
         OR, // 4 ||
         AND, // 5 &&
@@ -20,9 +20,7 @@ public:
         ADD, // 8 +, -
         MUL, // 9 *, /
         UNARY, // 10 -, !
-        PRIMARY, // 11 '(' <exp> ')'
-        LITERAL, // 12 int, bool
-        END
+        END // 11 '\0'
     };
     Type type;
     std::string value;
