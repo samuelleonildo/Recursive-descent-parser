@@ -9,6 +9,9 @@ private:
     inline static bool is_possible = true;
     inline static bool is_bool = false;
 
+    int lparen_cnt = 0;
+    int rparen_cnt = 0;
+
     Tokenizer tokenizer;
     Token curr_token;
 
@@ -34,7 +37,7 @@ public:
     bool isPossible();
     bool isBool();
 
-    void resetStaticBools();
+    void increaseParenCnt();
 };
 
 #endif
